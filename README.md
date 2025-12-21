@@ -4,6 +4,16 @@ An MCP (Model Context Protocol) server that wraps the [Obsidian Local REST API](
 
 Built with [FastMCP](https://gofastmcp.com/) - automatically generates tools from the OpenAPI specification.
 
+## Why this server
+
+Most MCP wrappers for REST APIs are maintained by manually re-implementing each endpoint as a bespoke tool. That approach tends to drift over time: when the underlying REST API adds/renames/changes endpoints, the MCP server needs a code update (and a new release) to catch up.
+
+This server is different: it **dynamically generates tools directly from the Obsidian Local REST API OpenAPI spec**.
+
+- **Stays in sync with the REST API**: when the plugin’s OpenAPI spec changes, this server’s tool surface updates automatically (no hand-updating dozens of wrappers).
+- **Less breakage / less maintenance**: fewer places for the MCP implementation to get out of date compared to the plugin.
+- **Full coverage**: you get the complete set of documented endpoints exposed as tools.
+
 ## Prerequisites
 
 1. [Obsidian](https://obsidian.md/) with the [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) plugin installed and enabled
