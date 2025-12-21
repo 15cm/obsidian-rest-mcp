@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "obsidian-rest-mcp"
-version = "0.1.0"
+version = "0.3.0"
 description = "MCP server for Obsidian Local REST API"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 keywords = ["mcp", "obsidian", "fastmcp", "llm", "ai"]
-authors = [{ name = "Your Name", email = "you@example.com" }]
+authors = [{ name = "Alexander Weichart", email = "mail@weichart.de" }]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
