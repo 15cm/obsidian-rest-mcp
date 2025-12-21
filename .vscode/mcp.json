@@ -1,6 +1,6 @@
 {
 	"servers": {
-		"obsidianLocalRest": {
+		"Obsidian Rest MCP": {
 			"type": "stdio",
 			"command": "docker",
 			"args": [
