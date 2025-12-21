@@ -6,6 +6,7 @@ from typing import Any
 import httpx
 import yaml
 from fastmcp import FastMCP
+from fastmcp.server.openapi import HTTPRoute, OpenAPITool, OpenAPIResource, OpenAPIResourceTemplate
 
 
 def create_ssl_context() -> ssl.SSLContext:
@@ -80,11 +81,26 @@ def create_server(
         timeout=30.0,
     )
 
+    def disable_output_schema(
+        route: HTTPRoute,
+        component: OpenAPITool | OpenAPIResource | OpenAPIResourceTemplate,
+    ) -> None:
+        """Disable output schema for tools.
+        
+        The Obsidian REST API returns various content types (text/markdown, 
+        application/json, etc.). When an outputSchema is defined but the 
+        response is plain text, FastMCP raises an error. Disabling output 
+        schemas allows all response types to work correctly.
+        """
+        if isinstance(component, OpenAPITool):
+            component.output_schema = None
+
     # Create the MCP server from the OpenAPI spec
     mcp = FastMCP.from_openapi(
         openapi_spec=openapi_spec,
         client=api_client,
         name="Obsidian REST API",
+        mcp_component_fn=disable_output_schema,
     )
 
     return mcp
