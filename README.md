@@ -29,32 +29,32 @@ Add to your VS Code MCP settings (`.vscode/mcp.json`):
 
 ```json
 {
-  "servers": {
-    "obsidian": {
-      "type": "stdio",
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "--network=host",
-        "-e",
-        "OBSIDIAN_API_KEY",
-        "ghcr.io/alexweichart/obsidian-rest-mcp:latest"
-      ],
-      "env": {
-        "OBSIDIAN_API_KEY": "${input:obsidian-api-key}"
-      }
-    }
-  },
-  "inputs": [
-    {
-      "id": "obsidian-api-key",
-      "type": "promptString",
-      "description": "Obsidian Local REST API Key",
-      "password": true
-    }
-  ]
+	"servers": {
+		"obsidian": {
+			"type": "stdio",
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"--network=host",
+				"-e",
+				"OBSIDIAN_API_KEY",
+				"ghcr.io/alexweichart/obsidian-rest-mcp:latest"
+			],
+			"env": {
+				"OBSIDIAN_API_KEY": "${input:obsidian-api-key}"
+			}
+		}
+	},
+	"inputs": [
+		{
+			"id": "obsidian-api-key",
+			"type": "promptString",
+			"description": "Obsidian Local REST API Key",
+			"password": true
+		}
+	]
 }
 ```
 
@@ -66,20 +66,20 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 
 ```json
 {
-  "mcpServers": {
-    "obsidian": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "--network=host",
-        "-e",
-        "OBSIDIAN_API_KEY=your_api_key_here",
-        "ghcr.io/alexweichart/obsidian-rest-mcp:latest"
-      ]
-    }
-  }
+	"mcpServers": {
+		"obsidian": {
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"--network=host",
+				"-e",
+				"OBSIDIAN_API_KEY=your_api_key_here",
+				"ghcr.io/alexweichart/obsidian-rest-mcp:latest"
+			]
+		}
+	}
 }
 ```
 
