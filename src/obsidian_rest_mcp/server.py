@@ -7,11 +7,11 @@ import httpx
 import yaml
 from fastmcp import FastMCP
 from fastmcp.server.openapi import (
-    HTTPRoute,
     OpenAPITool,
     OpenAPIResource,
     OpenAPIResourceTemplate,
 )
+from fastmcp.utilities.openapi import HTTPRoute
 
 
 def create_ssl_context() -> ssl.SSLContext:
