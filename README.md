@@ -27,7 +27,8 @@ Get your API key from **Obsidian Settings → Local REST API**.
 
 See the checked-in VS Code MCP configuration at `.vscode/mcp.json`.
 
-> **Note:** `--network=host` is required so the container can access the Obsidian REST API running on localhost.
+> **Note:** On macOS/Windows, containers can usually reach services on your machine via `https://host.docker.internal:27124`.
+> On Linux, you may need `--network=host` (or an equivalent host gateway setup) for the container to reach the Obsidian REST API.
 
 ## Available Tools
 

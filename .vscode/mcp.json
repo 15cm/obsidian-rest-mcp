@@ -2,13 +2,19 @@
 	"servers": {
 		"obsidianLocalRest": {
 			"type": "stdio",
-			"command": "${workspaceFolder}/.venv/bin/python",
-			"args": ["-m", "obsidian_rest_mcp"],
-			"env": {
-				"OBSIDIAN_API_KEY": "${input:obsidian-api-key}",
-				"OBSIDIAN_REST_URL": "https://127.0.0.1:27124",
-				"OBSIDIAN_OPENAPI_PATH": "/openapi.yaml"
-			}
+			"command": "docker",
+			"args": [
+				"run",
+				"--rm",
+				"-i",
+				"-e",
+				"OBSIDIAN_API_KEY=${input:obsidian-api-key}",
+				"-e",
+				"OBSIDIAN_REST_URL=https://host.docker.internal:27124",
+				"-e",
+				"OBSIDIAN_OPENAPI_PATH=/openapi.yaml",
+				"ghcr.io/alexw00/obsidian-rest-mcp:latest"
+			]
 		}
 	},
 	"inputs": [
