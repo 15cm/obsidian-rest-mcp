@@ -7,18 +7,7 @@ Built with [FastMCP](https://gofastmcp.com/) - automatically generates tools fro
 ## Prerequisites
 
 1. [Obsidian](https://obsidian.md/) with the [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) plugin installed and enabled
-2. Python 3.10+
-
-## Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/obsidian-rest-mcp.git
-cd obsidian-rest-mcp
-
-# Install dependencies
-pip install -e .
-```
+2. Docker
 
 ## Configuration
 
@@ -36,18 +25,40 @@ Get your API key from **Obsidian Settings → Local REST API**.
 
 ### VS Code (MCP)
 
-This repo includes a ready-to-use VS Code workspace MCP configuration example: [mcp.json](mcp.json).
+Add to your VS Code MCP settings (`.vscode/mcp.json`):
 
-### As a CLI
-
-```bash
-# Using environment variables
-export OBSIDIAN_API_KEY=your_api_key_here
-python -m obsidian_rest_mcp
-
-# Or with command line arguments
-python -m obsidian_rest_mcp --api-key your_api_key_here
+```json
+{
+  "servers": {
+    "obsidian": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--network=host",
+        "-e",
+        "OBSIDIAN_API_KEY",
+        "ghcr.io/alexweichart/obsidian-rest-mcp:latest"
+      ],
+      "env": {
+        "OBSIDIAN_API_KEY": "${input:obsidian-api-key}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "obsidian-api-key",
+      "type": "promptString",
+      "description": "Obsidian Local REST API Key",
+      "password": true
+    }
+  ]
+}
 ```
+
+> **Note:** `--network=host` is required so the container can access the Obsidian REST API running on localhost.
 
 ### With Claude Desktop
 
@@ -55,28 +66,30 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 
 ```json
 {
-	"mcpServers": {
-		"obsidian": {
-			"command": "python",
-			"args": ["-m", "obsidian_rest_mcp"],
-			"env": {
-				"OBSIDIAN_API_KEY": "your_api_key_here"
-			}
-		}
-	}
+  "mcpServers": {
+    "obsidian": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--network=host",
+        "-e",
+        "OBSIDIAN_API_KEY=your_api_key_here",
+        "ghcr.io/alexweichart/obsidian-rest-mcp:latest"
+      ]
+    }
+  }
 }
 ```
 
-### Programmatic Usage
+### Docker CLI
 
-```python
-from obsidian_rest_mcp import create_server
-
-mcp = create_server(
-    base_url="https://127.0.0.1:27124",
-    api_key="your_api_key_here",
-)
-mcp.run()
+```bash
+docker run -i --rm \
+  --network=host \
+  -e OBSIDIAN_API_KEY=your_api_key_here \
+  ghcr.io/alexweichart/obsidian-rest-mcp:latest
 ```
 
 ## Available Tools
@@ -94,12 +107,26 @@ The server automatically exposes all endpoints from the Obsidian Local REST API:
 ## Development
 
 ```bash
+# Clone the repository
+git clone https://github.com/alexweichart/obsidian-rest-mcp.git
+cd obsidian-rest-mcp
+
 # Create virtual environment
 python -m venv .venv
 source .venv/bin/activate
 
 # Install in development mode
 pip install -e ".[dev]"
+
+# Run locally
+export OBSIDIAN_API_KEY=your_api_key_here
+python -m obsidian_rest_mcp
+```
+
+### Building the Docker Image Locally
+
+```bash
+docker build -t obsidian-rest-mcp .
 ```
 
 ## License
