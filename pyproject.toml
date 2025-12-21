@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "obsidian-rest-mcp"
+version = "0.1.0"
+description = "MCP server for Obsidian Local REST API"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["mcp", "obsidian", "fastmcp", "llm", "ai"]
+authors = [{ name = "Your Name", email = "you@example.com" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = ["fastmcp>=2.0.0", "httpx>=0.27.0", "pyyaml>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4.0"]
+
+[project.scripts]
+obsidian-rest-mcp = "obsidian_rest_mcp.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/obsidian_rest_mcp"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]

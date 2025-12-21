@@ -1,0 +1,22 @@
+{
+	"servers": {
+		"obsidianLocalRest": {
+			"type": "stdio",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"args": ["-m", "obsidian_rest_mcp"],
+			"env": {
+				"OBSIDIAN_API_KEY": "${input:obsidian-api-key}",
+				"OBSIDIAN_REST_URL": "https://127.0.0.1:27124",
+				"OBSIDIAN_OPENAPI_PATH": "/openapi.yaml"
+			}
+		}
+	},
+	"inputs": [
+		{
+			"type": "promptString",
+			"id": "obsidian-api-key",
+			"description": "Obsidian Local REST API key (Bearer token)",
+			"password": true
+		}
+	]
+}
