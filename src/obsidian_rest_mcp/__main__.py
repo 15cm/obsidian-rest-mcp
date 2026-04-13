@@ -15,6 +15,10 @@ Environment variables:
   OBSIDIAN_REST_URL      Base URL of the Obsidian REST API
   OBSIDIAN_API_KEY       API key for authentication (required)
   OBSIDIAN_OPENAPI_PATH  Path to the OpenAPI spec
+  OBSIDIAN_MCP_TRANSPORT Transport to use: stdio (default), http, or sse
+  OBSIDIAN_MCP_HOST      Host for http/sse transport (default: 127.0.0.1)
+  OBSIDIAN_MCP_PORT      Port for http/sse transport (default: 8000)
+  OBSIDIAN_MCP_PATH      Path for http/sse transport (default: /mcp/)
 
 Examples:
   # Using command line arguments
@@ -23,6 +27,9 @@ Examples:
   # Using environment variables
   export OBSIDIAN_API_KEY=YOUR_API_KEY
   python -m obsidian_rest_mcp
+
+  # HTTP transport
+  OBSIDIAN_MCP_TRANSPORT=http OBSIDIAN_API_KEY=YOUR_API_KEY python -m obsidian_rest_mcp
         """,
     )
 
@@ -42,6 +49,32 @@ Examples:
         "--openapi-path",
         default=os.environ.get("OBSIDIAN_OPENAPI_PATH", "/openapi.yaml"),
         help="Path to the OpenAPI spec (default: /openapi.yaml)",
+    )
+
+    parser.add_argument(
+        "--transport",
+        default=os.environ.get("OBSIDIAN_MCP_TRANSPORT", "stdio"),
+        choices=["stdio", "http", "sse"],
+        help="Transport to use (default: stdio)",
+    )
+
+    parser.add_argument(
+        "--host",
+        default=os.environ.get("OBSIDIAN_MCP_HOST", "127.0.0.1"),
+        help="Host for http/sse transport (default: 127.0.0.1)",
+    )
+
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=int(os.environ.get("OBSIDIAN_MCP_PORT", "8000")),
+        help="Port for http/sse transport (default: 8000)",
+    )
+
+    parser.add_argument(
+        "--path",
+        default=os.environ.get("OBSIDIAN_MCP_PATH", "/mcp/"),
+        help="Path for http/sse transport (default: /mcp/)",
     )
 
     args = parser.parse_args()
@@ -66,7 +99,10 @@ Examples:
             openapi_path=args.openapi_path,
             api_key=args.api_key,
         )
-        mcp.run()
+        if args.transport == "stdio":
+            mcp.run(transport="stdio")
+        else:
+            mcp.run(transport=args.transport, host=args.host, port=args.port, path=args.path)
     except Exception as e:
         print(f"Error starting server: {e}", file=sys.stderr)
         sys.exit(1)
