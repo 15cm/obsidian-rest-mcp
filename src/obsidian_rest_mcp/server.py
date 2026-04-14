@@ -1,5 +1,6 @@
 """Obsidian Local REST API MCP Server using FastMCP."""
 
+import json
 import ssl
 from typing import Any
 
@@ -12,6 +13,21 @@ from fastmcp.server.openapi import (
     OpenAPIResourceTemplate,
 )
 from fastmcp.utilities.openapi import HTTPRoute
+
+
+async def set_content_type(request: httpx.Request) -> None:
+    """Set Content-Type for POST/PATCH requests if not already set.
+
+    Detects JSON bodies and sets application/json; falls back to text/markdown.
+    """
+    if request.method in ("POST", "PATCH") and "content-type" not in request.headers:
+        body = request.content
+        if body:
+            try:
+                json.loads(body)
+                request.headers["content-type"] = "application/json"
+            except (json.JSONDecodeError, ValueError):
+                request.headers["content-type"] = "text/markdown"
 
 
 def create_ssl_context() -> ssl.SSLContext:
@@ -84,6 +100,7 @@ def create_server(
         headers={"Authorization": f"Bearer {api_key}"},
         verify=create_ssl_context(),
         timeout=30.0,
+        event_hooks={"request": [set_content_type]},
     )
 
     def disable_output_schema(
